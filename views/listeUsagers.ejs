@@ -1,0 +1,13 @@
+<h1>Liste des usagers :</h1>
+
+<% if(typeof tousUsagers != 'undefined') { %>
+    <% tousUsagers.forEach(function(usager) {%>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <%= usager.nom %> - <%= usager.email %> 
+        </div>   
+    <% }); %>
+<% } %>
+
+<p>
+    <a href="/">Retour au menu</a>
+</p>

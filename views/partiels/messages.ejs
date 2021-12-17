@@ -1,0 +1,29 @@
+<% if(typeof erreurs != 'undefined') { %>
+    <% erreurs.forEach(function(erreur) {%>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <%= erreur.msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>        
+    <% }); %>
+<% } %>
+
+<% if(succes_msg != '') { %>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <%= succes_msg %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>      
+<% } %>
+
+<% if(erreur_msg != '') { %>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <%= erreur_msg %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>      
+<% } %>
+
+<% if(erreur_passeport != '') { %>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <%= erreur_passeport %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>      
+<% } %>

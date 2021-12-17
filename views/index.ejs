@@ -1,0 +1,22 @@
+<h1>Page d'accueil de mon site Web</h1>
+
+<div class="row mt-5">
+    <div class="col-md-6 m-auto">
+      <div class="card card-body text-center">
+        <h1><i class="fab fa-node-js fa-3x"></i></h1>
+        <p>Menu pour <%= user.nom %> (<%= user.email %>)</p>
+        <% let gestion = user.roles.find(role => role == 'gestion') %>
+        <% let admin = user.roles.find(role => role == 'admin') %>
+        <%- include('./partiels/messages') %>
+        <% if(admin){ %>
+          <a href="/usagers/register" class="btn btn-primary btn-block mb-2">Ajouter un usager</a>
+        <% } %>
+        <a href="/usagers/listeUsagers" class="btn btn-primary btn-block mb-2">Afficher tous les usagers</a>
+        <a href="/contenu" class="btn btn-primary btn-block mb-2">Afficher le contenu</a>
+        <% if(gestion){ %>
+          <a href="/gestionContenu" class="btn btn-primary btn-block mb-2">Gérer le contenu</a>
+        <% } %>
+        <a href="/usagers/logout" class="btn btn-secondary btn-block">Se déconnecter</a>
+      </div>
+    </div>
+  </div>

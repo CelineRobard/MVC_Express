@@ -1,0 +1,33 @@
+{
+  "name": "web2_rob_tp2",
+  "version": "1.0.0",
+  "description": "Remise le 5 janvier au soir\r Correction le 6 janvier en direct (prévoir de le présenter, avant ou après l'examen)",
+  "main": "serveur.js",
+  "scripts": {
+    "dev": "nodemon serveur",
+    "start": "node serveur"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CelineRobard/WEB2_ROB_TP2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CelineRobard/WEB2_ROB_TP2/issues"
+  },
+  "homepage": "https://github.com/CelineRobard/WEB2_ROB_TP2#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.17.2",
+    "mongoose": "^6.0.13",
+    "multer": "^1.4.4",
+    "nodemon": "^2.0.15",
+    "passport": "^0.5.0",
+    "passport-local": "^1.0.0"
+  }
+}
