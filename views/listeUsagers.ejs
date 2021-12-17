@@ -3,7 +3,10 @@
 <% if(typeof tousUsagers != 'undefined') { %>
     <% tousUsagers.forEach(function(usager) {%>
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <img src="/images/user-defaut.jpg" alt="User default image" />
             <%= usager.nom %> - <%= usager.email %> 
+            <a href="/usagers/editer/<%= usager._id %>" >Modifier</a>
+            <a href="/usagers/supprimer/<%= usager._id %>" >Supprimer</a>
         </div>   
     <% }); %>
 <% } %>

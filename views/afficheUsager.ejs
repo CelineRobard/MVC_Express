@@ -5,7 +5,9 @@
             <i class="fas <%= iconeFAS%>"></i> <%= titre%> un compte
         </h1>
         <%- include ('./partiels/messages.ejs') %>
-        <form action="/usagers/register" method="POST" enctype="multipart/form-data">
+        <% if(typeof action === "undefined"){ %>
+            <form action="/usagers/ajouter" method="POST" enctype="multipart/form-data"></form>
+        <% } %>
             <div class="form-group">
                 <label for="nom">Nom</label>
                 <input type="text" id="nom" name="nom" class="form-control" 
@@ -56,9 +58,19 @@
                     value="<%= typeof password2 != 'undefined' ? password2 : '' %>"
                     placeholder="Confirmez le mot de passe">
             </div>
-            <div class="form-group">
-                <label>Téléverser une image de profil</label>
-                <input type="file" name="fichier" required />
+            <div>
+                <p>Image de profil</p>
+                <% if(typeof fichierImage !== "undefined" && fichierImage != '') { %>
+                    <div>
+                        <img src="/images/<%= fichierImage %>" alt="Image de profil" />
+                        <a href="/usagers/editer/<%= _id %>/image" >Modifier</a>
+                    </div>
+                <% }else{ %>
+                    <div class="form-group">
+                        <label>Téléverser</label>
+                        <input type="file" name="fichier" required />
+                    </div>
+                <% }%>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Enregistrer le compte</button>
         </form>

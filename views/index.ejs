@@ -9,7 +9,7 @@
         <% let admin = user.roles.find(role => role == 'admin') %>
         <%- include('./partiels/messages') %>
         <% if(admin){ %>
-          <a href="/usagers/register" class="btn btn-primary btn-block mb-2">Ajouter un usager</a>
+          <a href="/usagers/ajouter" class="btn btn-primary btn-block mb-2">Ajouter un usager</a>
         <% } %>
         <a href="/usagers/listeUsagers" class="btn btn-primary btn-block mb-2">Afficher tous les usagers</a>
         <a href="/contenu" class="btn btn-primary btn-block mb-2">Afficher le contenu</a>
