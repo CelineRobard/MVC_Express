@@ -2,7 +2,7 @@ module.exports = {
     estAdmin: function(requete, reponse, next) {
         if (requete.isAuthenticated()) {
             let admin = requete.user.roles.find(role => role == "admin");
-            console.log(admin);
+            //console.log(admin);
             if(admin){
                 return next();
             }else{

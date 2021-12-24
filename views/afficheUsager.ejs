@@ -5,19 +5,25 @@
             <i class="fas <%= iconeFAS%>"></i> <%= titre%> un compte
         </h1>
         <%- include ('./partiels/messages.ejs') %>
-        <% if(typeof action === "undefined"){ %>
-            <form action="/usagers/ajouter" method="POST" enctype="multipart/form-data"></form>
-        <% } %>
+
+        <form method="POST" enctype="multipart/form-data">
+            
+            <div class="form-group">
+                <label for="_id">_id</label>
+                <input type="text" id="_id" name="_id" class="form-control" 
+                    value="<%= typeof _id != 'undefined' ? _id : '' %>"
+                    placeholder="non chargé" >
+            </div>
             <div class="form-group">
                 <label for="nom">Nom</label>
                 <input type="text" id="nom" name="nom" class="form-control" 
                     value="<%= typeof nom != 'undefined' ? nom : '' %>"
-                    placeholder="Entrez le nom">
+                    placeholder="Entrez le nom" >
             </div>
             <div class="form-group">
                 <label for="email">Courriel</label> 
                 <input type="email" id="email" name="email" class="form-control" 
-                    value="<%= typeof email != 'undefined' ? email : '' %>"    
+                    value="<%= typeof email != 'undefined' ? email : '' %>"
                     placeholder="Entrez un courriel">
             </div>
             <fieldset class="form-group">
@@ -58,21 +64,40 @@
                     value="<%= typeof password2 != 'undefined' ? password2 : '' %>"
                     placeholder="Confirmez le mot de passe">
             </div>
-            <div>
+            <fieldset>
                 <p>Image de profil</p>
                 <% if(typeof fichierImage !== "undefined" && fichierImage != '') { %>
                     <div>
                         <img src="/images/<%= fichierImage %>" alt="Image de profil" />
-                        <a href="/usagers/editer/<%= _id %>/image" >Modifier</a>
+                        <input type="text" id="fichierImage" name="fichierImage" value="<%= fichierImage %>" hidden="true" />
+                        <button type="submit" formaction="/usagers/editer/image/<%= typeof _id != 'undefined' ? _id : '' %>" class="btn btn-secondary btn-block">modifier</button>
+                        <div>
+                            <button type="submit" formaction="/usagers/editer/<%= typeof _id != 'undefined' ? _id : '' %>" class="btn btn-primary btn-block">Enregistrer le compte</button>
+                        </div>
                     </div>
                 <% }else{ %>
                     <div class="form-group">
                         <label>Téléverser</label>
                         <input type="file" name="fichier" required />
+                        
+                        <% if(titre === "Modifier") { %>
+                            <div>
+                                <button type="submit" formaction="/usagers/editer/image/new/<%= typeof _id != 'undefined' ? _id : '' %>" class="btn btn-primary btn-block">Enregistrer les modifications</button>
+                            </div>
+                        <% }%>
+                        <% if(titre === "Créer") { %>
+                            <div>
+                                <button type="submit" formaction="/usagers/ajouter" class="btn btn-primary btn-block">Enregistrer nouveau compte</button>
+                            </div>
+                        <% }%>
                     </div>
                 <% }%>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Enregistrer le compte</button>
+                <% if(titre === "Supprimer") { %>
+                    <div>
+                        <button type="submit" formaction="/usagers/supprimer" class="btn btn-primary btn-block">Confirmer la suppression du compte</button>
+                    </div>
+                <% }%>
+            </fieldset>
         </form>
         <p class="lead mt-4"><a href="/">Revenir à la page d'accueil</a></p>
     </div>

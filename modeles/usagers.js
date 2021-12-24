@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // schema de donnees pour les Usagers
-// _id, nom, email, password, date
+// _id, nom, email, password, date, roles, fichierImage
 let schemaUsager = mongoose.Schema({
     nom: {
         type: String,
