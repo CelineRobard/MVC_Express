@@ -1,5 +1,10 @@
 # Web2 - TP2 : Céline Robard
 
+TODO :
+- faire la partie livre
+- améliorer le design
+- revoir la modifictaion de l'usager avec image (cf. suppression pour le id)
+
 Remise le 5 janvier au soir
 Correction le 6 janvier en direct (prévoir de le présenter, avant ou après l'examen)
 
