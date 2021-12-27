@@ -1,0 +1,66 @@
+<div class="row mt-5">
+    <div class="col-md-6 m-auto">
+      <div class="card card-body">
+        <h1 class="text-center mb-3">
+            <i class="fas <%= iconeFAS%>"></i> <%= titre%> un livre
+        </h1>
+        <%- include ('./partiels/messages.ejs') %>
+
+        <form method="POST" enctype="multipart/form-data">
+            
+            <div class="form-group">
+                <label for="_id">_id</label>
+                <input type="text" id="_id" name="_id" class="form-control" 
+                    value="<%= typeof _id != 'undefined' ? _id : '' %>"
+                    placeholder="non chargé" >
+            </div>
+            <div class="form-group">
+                <label for="titreLivre">Titre</label>
+                <input type="text" id="titreLivre" name="titreLivre" class="form-control" 
+                    value="<%= typeof titreLivre != 'undefined' ? titreLivre : '' %>"
+                    placeholder="Entrez le titre du livre" >
+            </div>
+            <div class="form-group">
+                <label for="auteur">Auteur</label> 
+                <input type="auteur" id="auteur" name="auteur" class="form-control" 
+                    value="<%= typeof auteur != 'undefined' ? auteur : '' %>"
+                    placeholder="Entrez un auteur">
+            </div>
+            <div class="form-group">
+                <label for="resume">Résumé</label> 
+                <input type="resume" id="resume" name="resume" class="form-control" 
+                    value="<%= typeof resume != 'undefined' ? resume : '' %>"
+                    placeholder="Entrez un resume">
+            </div>
+            <div class="form-group">
+                <label for="langue">Langue</label> 
+                <input type="langue" id="langue" name="langue" class="form-control" 
+                    value="<%= typeof langue != 'undefined' ? langue : '' %>"
+                    placeholder="Entrez un langue">
+            </div>
+            <div class="form-group">
+                <label for="prix">Prix</label> 
+                <input type="prix" id="prix" name="prix" class="form-control" 
+                    value="<%= typeof prix != 'undefined' ? prix : '' %>"
+                    placeholder="Entrez un prix">
+            </div>
+            <div class="form-group">
+                <label for="genre">Genre</label> 
+                <input type="genre" id="genre" name="genre" class="form-control" 
+                    value="<%= typeof genre != 'undefined' ? genre : '' %>"
+                    placeholder="Entrez un genre">
+            </div>
+            <div class="form-group">
+                <label for="url_image">Image</label> 
+                <input type="url_image" id="url_image" name="url_image" class="form-control" 
+                    value="<%= typeof url_image != 'undefined' ? url_image : '' %>"
+                    placeholder="Entrez l'url de l'image à afficher">
+            </div>
+            <div>
+                <button type="submit" formaction="/livres/ajouter" class="btn btn-primary btn-block">Enregistrer nouveau livre</button>
+            </div>
+        </form>
+        <p class="lead mt-4"><a href="/">Revenir à la page d'accueil</a></p>
+    </div>
+</div>
+</div>

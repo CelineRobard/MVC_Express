@@ -1,0 +1,15 @@
+<h1>Liste des livres :</h1>
+
+<% if(typeof tousLivres != 'undefined') { %>
+    <% tousLivres.forEach(function(livre) {%>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <%= livre.titre %> - <%= livre.auteur %> 
+            <a href="/livres/editer/<%= livre._id %>" >Modifier</a>
+            <a href="/livres/supprimer/<%= livre._id %>" >Supprimer</a>
+        </div>   
+    <% }); %>                    
+<% } %>
+
+<p>
+    <a href="/">Retour au menu</a>
+</p>

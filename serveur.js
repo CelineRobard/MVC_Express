@@ -59,6 +59,7 @@ app.use((requete, reponse, next) => {
 // mes routes...
 app.use('/', require('./routes/index'));
 app.use('/usagers', require('./routes/usagers'));
+app.use('/livres', require('./routes/livres'));
 
 // mes vues....
 app.set('views', './views');
