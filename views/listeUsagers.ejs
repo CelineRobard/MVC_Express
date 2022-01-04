@@ -3,7 +3,8 @@
 <% if(typeof tousUsagers != 'undefined') { %>
     <% tousUsagers.forEach(function(usager) {%>
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <img class="rounded-circle img-thumbnail" src="/images/<%= (typeof usager.fichierImage == 'undefined') || usager.fichierImage.length > 1 ? usager.fichierImage : 'user-defaut.jpg' %>" alt="Image de profil" />
+            <img class="rounded-circle img-thumbnail" src="/images/<%= typeof usager.fichierImage == 'undefined' || usager.fichierImage == '' ? 'user-defaut.jpg' : usager.fichierImage %>" alt="Image de profil" />
+            <%= usager.fichierImage.length %>
             <%= usager.nom %> - <%= usager.email %> 
             <a href="/usagers/editer/<%= usager._id %>" >Modifier</a>
             <a href="/usagers/supprimer/<%= usager._id %>" >Supprimer</a>

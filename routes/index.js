@@ -8,14 +8,14 @@ router.get('/', estAuthentifie, (requete, reponse) => {
         user:requete.user
     });
 });
-router.get('/contenu', estAuthentifie, (requete, reponse) => {
-    reponse.render('contenu', {
-        user: requete.user
+router.get('/index', estAuthentifie, (requete, reponse) => {
+    reponse.render('index',{
+        user:requete.user
     });
 });
-router.get('/gestionContenu', estAuthentifie, estGestion, (requete, reponse) => {
-    reponse.render('gestionContenu', {
-        user: requete.user
+router.get('/index.html', estAuthentifie, (requete, reponse) => {
+    reponse.render('index',{
+        user:requete.user
     });
 });
 

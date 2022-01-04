@@ -70,29 +70,24 @@
                     <div>
                         <img src="/images/<%= fichierImage %>" alt="Image de profil" />
                         <input type="text" id="fichierImage" name="fichierImage" value="<%= fichierImage %>" hidden="true" />
-                        <button type="submit" formaction="/usagers/editer/image/<%= typeof _id != 'undefined' ? _id : '' %>" class="btn btn-secondary btn-block">modifier</button>
-                        <div>
-                            <button type="submit" formaction="/usagers/editer/<%= typeof _id != 'undefined' ? _id : '' %>" class="btn btn-primary btn-block">Enregistrer le compte</button>
-                        </div>
+                        <button type="submit" formaction="/usagers/editer/<%= typeof _id != 'undefined' ? _id : '' %>" class="btn btn-secondary btn-block">modifier</button>
                     </div>
                 <% }else{ %>
                     <div class="form-group">
                         <label>Téléverser</label>
                         <input type="file" name="fichier" required />
-                        
-                        <% if(titre === "Modifier") { %>
-                            <div>
-                                <button type="submit" formaction="/usagers/editer/image/new/<%= typeof _id != 'undefined' ? _id : '' %>" class="btn btn-primary btn-block">Enregistrer les modifications</button>
-                            </div>
-                        <% }%>
-                        <% if(titre === "Créer") { %>
-                            <div>
-                                <button type="submit" formaction="/usagers/ajouter" class="btn btn-primary btn-block">Enregistrer nouveau compte</button>
-                            </div>
-                        <% }%>
                     </div>
                 <% }%>
-                <% if(titre === "Supprimer") { %>
+
+                <% if(titre === "Créer") { %>
+                    <div>
+                        <button type="submit" formaction="/usagers/ajouter" class="btn btn-primary btn-block">Enregistrer nouveau compte</button>
+                    </div>
+                <% } else if(titre === "Modifier") { %>
+                    <div>
+                        <button type="submit" formaction="/usagers/editer" class="btn btn-primary btn-block">Enregistrer les modifications</button>
+                    </div>
+                <% } else { %>
                     <div>
                         <button type="submit" formaction="/usagers/supprimer" class="btn btn-primary btn-block">Confirmer la suppression du compte</button>
                     </div>
