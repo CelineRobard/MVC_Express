@@ -1,106 +1,98 @@
-//Ce fichier est chargé par le fichier principal serveur.js pour toutes les urls des requêtes débutant par '/livres'
+//Ce fichier est chargé par le fichier principal serveur.js pour toutes les urls des requêtes débutant par '/livres' pour la gestion des livres
 const express = require('express');
 const router = express.Router();
 
 
-/*********************************************************************************************/
-/*                     Routes pour la gestion des livres de la BD                           */
-/*********************************************************************************************/
-
 //Permettre aux utilisateurs authentifiés d'ajouter, récupérer, modifier et supprimer des livres de la BD
 
-//Chargement du modèle Livres pour intéragir avec la BD (collection livres)
 const Livres = require('../modeles/livres');
+const { estAuthentifie } = require('../config/auth');
+const { estGestion } = require('../config/auth_gestion');
 
-//Fonctions intermédiaires pour adapter la réponse du serveur selon que l'utilisateur est authentifié et/ou dispose des droits requis
-    //1.La fonction qui vérifie qu'une session passport est active
-    const { estAuthentifie } = require('../config/auth');
-
-    //2.La fonction qui vérifie que l'utilisateur dispose des droits requis pour gérer les livres (rôle gestion)
-    const { estGestion } = require('../config/auth_gestion');
-
-
-/****************************** Format des routes *****************************/
-
-//La racine de toutes les routes définies ci-après est '/livres'.
-
-/*
-/livres
-/livres/editer
-/livres/ajouter
-/livres/supprimer
-*/
 
 /****************************** Récupérer tous les livres la BD ******************************/
 
 router.get('/', estAuthentifie, (requete, reponse) => {
     Livres.find({}).then((tousLivres) => {
-        reponse.render('listeLivres',{ tousLivres });
-        //console.log(tousLivres);
-        //reponse.end();
+        console.log(tousLivres);
+        reponse.render('listeLivres',{ 
+            user:requete.user,
+            tousLivres
+        });
+    }).catch( err => console.log(err));
+});
+
+router.get('/details/:idLivre', estAuthentifie, estGestion, (requete,reponse) => {
+    Livres.findOne({ _id: requete.params.idLivre }).then(livre => {
+        reponse.render('detailsLivre', {
+            user:requete.user,
+            livre
+        });               
     }).catch( err => console.log(err));
 });
 
 /****************************** Ajouter un utilisateur à la BD ******************************/
 
 //1.Afficher le formulaire utilisateur vide
-//router.post('/ajouter', estAuthentifie, estGestion, (requete, reponse) => {
-router.get('/ajouter', estAuthentifie, (requete, reponse) => {
+router.get('/ajouter', estAuthentifie, estGestion, (requete, reponse) => {
     reponse.render('afficheLivre',{
-        titre: 'Créer',
+        titreForm: 'Créer',
         iconeFAS: 'fa-plus'
     });
-    //_id,titre,auteur,résumé,langue,date,prix,genre,url_image (undefined)
 });
 
 //2.Envoyer les données du formulaire complété
-//router.post('/ajouter', estAuthentifie, estGestion, (requete, reponse) => {
-router.post('/ajouter', estAuthentifie, (requete, reponse) => {
-    // console.log(requete.body);
-    const { titreLivre,auteur,resume,langue,prix,genre,url_image } = requete.body;
+router.post('/ajouter', estAuthentifie, estGestion, (requete, reponse) => {
+    const { titre,auteur,resume,langue,genre,url_image } = requete.body;
+    let prix = requete.body.prix;
     
     let erreurs = [];
 
-    if (!titreLivre || !auteur || !resume || !langue || !prix || !genre || !url_image) {
+    if (!titre || !auteur || !resume || !langue || !prix || !genre || !url_image) {
         erreurs.push( { msg: 'Remplir tous les champs' } );
+    }
+
+    if (isNaN(prix)){
+        prix = prix.replace(/,/g,'.');
+        if (isNaN(prix)){
+            erreurs.push( { msg: 'Saisir un prix valide' } );
+        }
     }
 
     if (erreurs.length > 0) {
     
         reponse.render('afficheLivre', {
-            titre: 'Créer',
+            titreForm: 'Créer',
             iconeFAS: 'fa-plus',
             erreurs,
-            titreLivre,
+            titre,
             auteur,
             resume,
             langue,
             prix,
             genre,
             url_image
-            //gestion
         });
     } else {
-        Livres.findOne({ titre: titreLivre }).then(livre => {
+        Livres.findOne({ titre: titre }).then(livre => {
             if (livre) {
                 erreurs.push({ msg: 'Ce livre existe deja'});
                 reponse.render('afficheLivre', {
-                    titre: 'Créer',
+                    titreForm: 'Créer',
                     iconeFAS: 'fa-plus',
                     erreurs,
-                    titreLivre,
+                    titre,
                     auteur,
                     resume,
                     langue,
                     prix,
                     genre,
                     url_image
-                    //gestion
                 });               
             } else {
                 
                 const nouveauLivre = new Livres({
-                    titreLivre,
+                    titre,
                     auteur,
                     resume,
                     langue,
@@ -116,61 +108,172 @@ router.post('/ajouter', estAuthentifie, (requete, reponse) => {
                     reponse.redirect('/livres/ajouter');
                 }).catch(err => console.log(err));
             }
-        })
+        });
     }   
 });
 
-/*
+/****************************** Supprimer un livre de la BD ******************************/
 
-//obtenir un livre par son _id dans la BD
-module.exports.getLivreById = (idLivre,callback) => {
-    Livres.findById(idLivre,callback);
-};
+//1.Afficher le formulaire pré-rempli sur GET '/supprimer/:idLivre'
+//3.Envoyer le formulaire sur POST '/supprimer'
 
-//obtenir un livre par titre dans la BD
-module.exports.getLivreParTitre = (titre,callback) => {  //je reçoi un titre
-    //Pour la recherche je créé un query : créer un objet de recherche
-    //c'est différent ce q'on recoit de ce que la requete a besoin
-    let query = { "titre" : {$regex: titre, $options: "i"}};
-    Livres.find(query,callback);
-    //let trier = {pages: -1};
-    //Livres.find(query).sort(trier).exec(callback);
-};
+router.get('/supprimer/:idLivre', estAuthentifie, estGestion, (requete, reponse) => {
+    
+    Livres.findById(requete.params.idLivre).then(livre => {
+        //Récupérer les données du livre et passer les valeurs en paramètre pour rendre afficheLivre
 
-//ajouter un livre
-module.exports.ajoutLivre = (livre,callback) => {
-    if(!livre._id){
-        livre._id = new mongoose.Types.ObjectId().toString();
+        const { 
+            _id,
+            titre,
+            auteur,
+            resume,
+            langue,
+            prix,
+            genre,
+            url_image
+        } = livre;
+
+        reponse.render('afficheLivre',{
+            user:requete.user,
+            titreForm: 'Supprimer',
+            iconeFAS: 'fa-user-slash',
+            _id,
+            titre,
+            auteur,
+            resume,
+            langue,
+            prix,
+            genre,
+            url_image
+        });
+    }).catch(err => console.log(err));
+});
+
+router.post('/supprimer', estAuthentifie, estGestion, (requete, reponse) => {
+    //Réccupérer les données du formulaire pour les passer en paramètre du formulaire de confirmation
+    const { 
+        _id,
+        titre,
+        auteur,
+        resume,
+        langue,
+        prix,
+        genre,
+        url_image
+    } = requete.body;
+    
+    Livres.deleteOne({_id}).then(livre => {
+        reponse.render('afficheLivre',{
+            user:requete.user,
+            titreForm: "Suppression d'",
+            iconeFAS: 'fa-trash',
+            _id,
+            titre,
+            auteur,
+            resume,
+            langue,
+            prix,
+            genre,
+            url_image
+        });
+    }).catch(err => console.log(err));
+});
+
+/********************************** Modifier un livre *********************************/
+
+//1.Afficher le formulaire pré-rempli sur GET '/editer/:idLivre'
+//2.Envoyer le formulaire sur POST '/editer'
+
+router.get('/editer/:idLivre', estAuthentifie, estGestion, (requete, reponse) => {
+
+    Livres.findById(requete.params.idLivre).then(livre => {
+        //Récupérer les livres dans la BD et passer les valeurs en paramètre pour rendre afficheLivre
+
+        const { 
+            _id,
+            titre,
+            auteur,
+            resume,
+            langue,
+            prix,
+            genre,
+            url_image
+        } = livre;
+
+        reponse.render('afficheLivre',{
+            user:requete.user,
+            titreForm: "Modifier",
+            iconeFAS: 'fa-edit',
+            _id,
+            titre,
+            auteur,
+            resume,
+            langue,
+            prix,
+            genre,
+            url_image
+        });
+    }).catch(err => console.log(err));
+});
+
+router.post('/editer', estAuthentifie, estGestion, (requete, reponse) => {
+    
+    const { 
+        _id,
+        titre,
+        auteur,
+        resume,
+        langue,
+        genre,
+        url_image
+    } = requete.body;
+
+    let prix = requete.body.prix;
+    
+    let erreurs = [];
+
+    if (prix && isNaN(prix)){
+        prix = prix.replace(/,/g,'.');
+        if (isNaN(prix)){
+            erreurs.push( { msg: 'Saisir un prix valide' } );
+        }
     }
-    Livres.create(livre,callback);
-};
 
-//supprimer un livre dans la BD
-module.exports.supprimeLivre = (idLivre,callback) => {
-    var query = { "_id" : idLivre}; //Création d'un objet utilisé par la fonction mongoose
-    Livres.deleteOne(query,callback);  //Fait appel à la librairie mongoose
-};
+    if (erreurs.length > 0) {
+    
+        reponse.render('afficheLivre', {
+            titreForm: 'Créer',
+            iconeFAS: 'fa-plus',
+            erreurs,
+            titre,
+            auteur,
+            resume,
+            langue,
+            prix,
+            genre,
+            url_image
+            //gestion
+        });
+    } else {
+        const newLivre = {
+            titre,
+            auteur,
+            resume,
+            langue,
+            prix,
+            genre,
+            url_image
+        };
 
-//modifier un livre
-module.exports.modifeLivre = (idLivre,livre,callback) => {
-    var query = { "_id" : idLivre};
-    var options = { };
-    var nouveauLivre = {
-        _id : livre._id,
-        titre: livre.titre,
-        auteur: livre.auteur,
-        résumé: livre.résumé,
-        éditeur: livre.éditeur,
-        pages: livre.pages,
-        langue: livre.langue,
-        date: livre.date,
-        prix: livre.prix,
-        genre: livre.genre
-    };
-    Livres.findOneAndUpdate(query,nouveauLivre,options,callback);
-};
-
-*/
+        Livres.findOneAndUpdate({ "_id": _id }, newLivre)
+            .then(
+                livre =>   { 
+                                requete.flash('succes_msg', 'Le livre : a été modifié avec succès');
+                                reponse.redirect('/livres/editer/' + _id );
+                            })
+            .catch(err=>console.log(err));
+    }
+});
 
 
 module.exports = router;

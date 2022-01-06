@@ -27,9 +27,13 @@
     </div>
     <div class="container">
         <%- body %>
+        <% if(typeof menu == 'undefined'){ %>
+            <p class="lead mt-4"><a href="/">Revenir à la page d'accueil</a></p>
+            <% } %>
     </div>
-    <div>
-        <p class="text-muted m-5">Travail pratique n°2 : Programme de gestion des collections livres et usagers</p>
+    <div class=" m-5">
+        <hr>
+        <p class="text-muted">Travail pratique n°2 : Programme de gestion des collections livres et usagers</p>
     </div>
 </body>
 </html>

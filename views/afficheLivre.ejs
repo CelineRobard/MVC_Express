@@ -1,23 +1,30 @@
+<h2>Collection de livres</h2>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+      <li class="breadcrumb-item active" ><a href="/livres">Livres</a></li>
+      <li class="breadcrumb-item active" aria-current="page"><%= typeof titre != 'undefined' ? titre : 'Nouveau livre' %></li>
+    </ol>
+</nav>
 <div class="row mt-5">
     <div class="col-md-6 m-auto">
       <div class="card card-body">
         <h1 class="text-center mb-3">
-            <i class="fas <%= iconeFAS%>"></i> <%= titre%> un livre
+            <i class="fas <%= iconeFAS%>"></i> <%= titreForm %> un livre
         </h1>
         <%- include ('./partiels/messages.ejs') %>
 
         <form method="POST" enctype="multipart/form-data">
             
             <div class="form-group">
-                <label for="_id">_id</label>
                 <input type="text" id="_id" name="_id" class="form-control" 
                     value="<%= typeof _id != 'undefined' ? _id : '' %>"
-                    placeholder="non chargé" >
+                    hidden>
             </div>
             <div class="form-group">
                 <label for="titreLivre">Titre</label>
-                <input type="text" id="titreLivre" name="titreLivre" class="form-control" 
-                    value="<%= typeof titreLivre != 'undefined' ? titreLivre : '' %>"
+                <input type="text" id="titre" name="titre" class="form-control" 
+                    value="<%= typeof titre != 'undefined' ? titre : '' %>"
                     placeholder="Entrez le titre du livre" >
             </div>
             <div class="form-group">
@@ -26,12 +33,19 @@
                     value="<%= typeof auteur != 'undefined' ? auteur : '' %>"
                     placeholder="Entrez un auteur">
             </div>
-            <div class="form-group">
-                <label for="resume">Résumé</label> 
-                <input type="resume" id="resume" name="resume" class="form-control" 
-                    value="<%= typeof resume != 'undefined' ? resume : '' %>"
-                    placeholder="Entrez un resume">
-            </div>
+                        
+            <% if(typeof resume != 'undefined'){ %>
+                <div class="form-group">
+                    <label for="resume">Résumé</label> 
+                    <textarea type="resume" id="resume" name="resume" class="form-control" rows="5" placeholder="Saisir un résumé ici"><%= resume %></textarea>
+                </div>
+            <% }else{ %>
+                <div class="form-group">
+                    <label for="resume">Résumé</label> 
+                    <textarea type="resume" id="resume" name="resume" class="form-control" rows="5" placeholder="Saisir un résumé ici"></textarea>
+                </div>
+            <% } %>
+
             <div class="form-group">
                 <label for="langue">Langue</label> 
                 <input type="langue" id="langue" name="langue" class="form-control" 
@@ -40,7 +54,7 @@
             </div>
             <div class="form-group">
                 <label for="prix">Prix</label> 
-                <input type="prix" id="prix" name="prix" class="form-control" 
+                <input type="text" id="prix" name="prix" class="form-control" 
                     value="<%= typeof prix != 'undefined' ? prix : '' %>"
                     placeholder="Entrez un prix">
             </div>
@@ -56,11 +70,22 @@
                     value="<%= typeof url_image != 'undefined' ? url_image : '' %>"
                     placeholder="Entrez l'url de l'image à afficher">
             </div>
-            <div>
-                <button type="submit" formaction="/livres/ajouter" class="btn btn-primary btn-block">Enregistrer nouveau livre</button>
-            </div>
+            
+            <% if(titreForm === "Créer") { %>
+                <div>
+                    <button type="submit" formaction="/livres/ajouter" class="btn btn-primary btn-block">Enregistrer nouveau livre</button>
+                </div>
+            <% } else if(titreForm === "Modifier") { %>
+                <div>
+                    <button type="submit" formaction="/livres/editer" class="btn btn-primary btn-block">Enregistrer les modifications</button>
+                </div>
+            <% } else if(titreForm === "Supprimer") { %>
+                <div>
+                    <button type="submit" formaction="/livres/supprimer" class="btn btn-primary btn-block">Confirmer la suppression</button>
+                </div>
+            <% }%>
+
         </form>
-        <p class="lead mt-4"><a href="/">Revenir à la page d'accueil</a></p>
     </div>
 </div>
 </div>

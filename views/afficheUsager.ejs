@@ -1,18 +1,26 @@
+<h2>Gestion des usagers</h2>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+      <li class="breadcrumb-item active" ><a href="/usagers/listeUsagers">Usagers</a></li>
+      <li class="breadcrumb-item active" aria-current="page"><%= typeof nom != 'undefined' ? nom : 'Nouvel usager' %></li>
+    </ol>
+</nav>
+
 <div class="row mt-5">
     <div class="col-md-6 m-auto">
-      <div class="card card-body">
+      <div class="card card-body"> 
         <h1 class="text-center mb-3">
-            <i class="fas <%= iconeFAS%>"></i> <%= titre%> un compte
+            <i class="fas <%= iconeFAS%>"></i> <%= titre %> un usager
         </h1>
         <%- include ('./partiels/messages.ejs') %>
 
         <form method="POST" enctype="multipart/form-data">
             
             <div class="form-group">
-                <label for="_id">_id</label>
                 <input type="text" id="_id" name="_id" class="form-control" 
                     value="<%= typeof _id != 'undefined' ? _id : '' %>"
-                    placeholder="non chargé" >
+                    hidden>
             </div>
             <div class="form-group">
                 <label for="nom">Nom</label>
@@ -64,37 +72,41 @@
                     value="<%= typeof password2 != 'undefined' ? password2 : '' %>"
                     placeholder="Confirmez le mot de passe">
             </div>
-            <fieldset>
-                <p>Image de profil</p>
-                <% if(typeof fichierImage !== "undefined" && fichierImage != '') { %>
-                    <div>
-                        <img src="/images/<%= fichierImage %>" alt="Image de profil" />
-                        <input type="text" id="fichierImage" name="fichierImage" value="<%= fichierImage %>" hidden="true" />
-                        <button type="submit" formaction="/usagers/editer/<%= typeof _id != 'undefined' ? _id : '' %>" class="btn btn-secondary btn-block">modifier</button>
-                    </div>
-                <% }else{ %>
+            
+                <% if(titre === "Créer") { %>
+                    <p>Image de profil</p>
                     <div class="form-group">
                         <label>Téléverser</label>
                         <input type="file" name="fichier" required />
                     </div>
-                <% }%>
-
-                <% if(titre === "Créer") { %>
                     <div>
                         <button type="submit" formaction="/usagers/ajouter" class="btn btn-primary btn-block">Enregistrer nouveau compte</button>
                     </div>
                 <% } else if(titre === "Modifier") { %>
+                    <p>Image de profil</p>
+                    <% if(typeof fichierImage !== "undefined" && fichierImage != '') { %>
+                        <div>
+                            <img src="/images/<%= fichierImage %>" alt="Image de profil" />
+                            <input type="text" id="fichierImage" name="fichierImage" value="<%= fichierImage %>" hidden="true" />
+                            <button type="submit" formaction="/usagers/editer/<%= typeof _id != 'undefined' ? _id : '' %>" class="btn btn-secondary btn-block">modifier</button>
+                        </div>
+                    <% }else{ %>
+                        <div class="form-group">
+                            <label>Téléverser</label>
+                            <input type="file" name="fichier" required />
+                        </div>
+                    <% }%>
                     <div>
                         <button type="submit" formaction="/usagers/editer" class="btn btn-primary btn-block">Enregistrer les modifications</button>
                     </div>
-                <% } else { %>
+                <% } else if(titre === "Supprimer") { %>
                     <div>
-                        <button type="submit" formaction="/usagers/supprimer" class="btn btn-primary btn-block">Confirmer la suppression du compte</button>
+                        <button type="submit" formaction="/usagers/supprimer" class="btn btn-primary btn-block">Confirmer la suppression</button>
                     </div>
                 <% }%>
             </fieldset>
         </form>
-        <p class="lead mt-4"><a href="/">Revenir à la page d'accueil</a></p>
     </div>
 </div>
 </div>
+

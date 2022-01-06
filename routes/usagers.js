@@ -17,7 +17,7 @@ const passport = require('passport');
 //2.Envoyer les données sur POST '/login'
 //3.Appeler la fonction de déconnexion de passport sur GET '/logout'
 
-router.get('/login', (requete, reponse) => reponse.render('login'));
+router.get('/login', (requete, reponse) => reponse.render('login',{ menu : false }));
   
 router.post('/login', (requete, reponse, next) => {
     passport.authenticate('local', {
@@ -224,14 +224,14 @@ router.post('/supprimer', estAuthentifie, estAdmin, (requete, reponse) => {
     Usagers.deleteOne({_id}).then(usager => {
         reponse.render('afficheUsager',{
             user:requete.user,
-            titre: 'Confirmation de suppression',
-            iconeFAS: 'fa-user-slash',
+            titre: "Suppression d'",
+            iconeFAS: 'fa-user-slash'/* ,
             _id,
             nom,
             email,
             admin,
             gestion,
-            fichierImage
+            fichierImage */
         });
     }).catch(err => console.log(err));
 });
@@ -293,15 +293,36 @@ router.post('/editer/:idUsager', estAuthentifie, estAdmin, (requete, reponse) =>
 
 router.post('/editer', estAuthentifie, estAdmin, (requete, reponse) => {
     
-    const  { _id,nom, email, password, admin, gestion, normal }  = requete.body;
-    let  fichierImage;
+    const  { _id,nom, email, password, password2, admin, gestion, normal }  = requete.body;
 
-    if(requete.files.length > 0){
-        const { originalname,destination,filename,size,path,mimetype} = requete.files[0];
-        fichierImage = conserverFichier(path,filename);
-    }else{
-        fichierImage = requete.body;
+    let erreurs = [];
+
+    if (!nom || !email ) {
+        erreurs.push( { msg: 'Remplir tous les champs' } );
     }
+    if(password){   //Vérifications des entrées pour le mot de passe uniquement si il est remplacé
+        if (password != password2) {
+            erreurs.push( { msg: 'Les mots de passe ne sont pas identiques'});
+        }
+        if (password && password.length < 6) {
+            erreurs.push( { msg: 'Le mot de passe doit etre de 6 car minimum'});
+        }
+    }
+
+    //Si il y a des erreurs, le formulaire est affiché de nouveau
+    if (erreurs.length > 0) {
+        reponse.render('afficheUsager',{
+            user:requete.user,
+            titre: 'Modifier',
+            iconeFAS: 'fa-user-edit',
+            erreurs,
+            _id,
+            nom,
+            email,
+            admin,
+            gestion
+        });
+    } else {
 
     let roles = ['normal'];
                 if(admin){
@@ -310,14 +331,89 @@ router.post('/editer', estAuthentifie, estAdmin, (requete, reponse) => {
                 if(gestion){
                     roles.push('gestion');
                 }
-                const newUsager = {
+    
+    let newUsager;
+    let fichierImage;
+
+    if(password && requete.files.length > 0){
+        bcrypt.genSalt(10, (err, salt) => {
+            if (err) throw err;
+            bcrypt.hash(password, salt, (err, hache) => {
+                if (err) throw err;
+                const { originalname,destination,filename,size,path,mimetype} = requete.files[0];
+                fichierImage = conserverFichier(path,filename);
+                newUsager = {
                     nom,
                     email,
-                    password,
+                    password:hache,
                     roles,
                     fichierImage
                 };
+                verifierEtModifier(requete,reponse,newUsager,_id);
+            });
+        });
+    }else if(requete.files.length > 0){
+        const { originalname,destination,filename,size,path,mimetype} = requete.files[0];
+        fichierImage = conserverFichier(path,filename);
+        newUsager = {
+            nom,
+            email,
+            roles,
+            fichierImage
+        };
+        verifierEtModifier(requete,reponse,newUsager,_id);
+    }else if(password){
+        bcrypt.genSalt(10, (err, salt) => {
+            if (err) throw err;
+            bcrypt.hash(password, salt, (err, hache) => {
+                if (err) throw err;
+                newUsager = {
+                    nom,
+                    email,
+                    password:hache,
+                    roles
+                };
+                verifierEtModifier(requete,reponse,newUsager,_id);
+            });
+        });
+    }else{
+        newUsager = { nom, email, roles };
+        verifierEtModifier(requete,reponse,newUsager,_id);
+    }
+}
+});
 
+/********************************************************************************************/
+function verifierEtModifier(requete,reponse,newUsager,_id){
+    //Vérifier si l'email est déjà utilisé par un autre utilisateur avant de pousser la modification
+    Usagers.findOne({ email: newUsager.email })
+    .then(usager => {
+        if (!usager) {
+            //Si il n'y a pas d'usager avec le même email on lance la mofification
+            modifierUsager(requete,reponse,newUsager,_id);
+        }else if(usager._id.toString() === _id){
+            //Sinon si l'usager trouvé est le même que celui que l'on souhaite modifier
+            modifierUsager(requete,reponse,newUsager,_id);
+        }else{
+            //Sinon moins un autre usager trouvé avec le même email : générer une erreur et afficher à nouveau le fomulaire
+                let erreurs= [{ msg: 'Cet email est déjà utilisé par un autre usager, veuillez en choisir un autre' }];
+                reponse.render('afficheUsager',{
+                    erreurs,
+                    user:requete.user,
+                    titre: 'Modifier',
+                    iconeFAS: 'fa-user-edit',
+                    _id:_id,
+                    nom:newUsager.nom,
+                    email:newUsager.email,
+                    admin:newUsager.roles.find(role => role === "admin"),
+                    gestion:newUsager.roles.find(role => role === "gestion"),
+                    password:newUsager.password
+                });
+        }
+}).catch(err=>console.log(err))
+}
+
+function modifierUsager(requete,reponse,newUsager,_id){
     Usagers.findOneAndUpdate({ "_id": _id }, newUsager)
         .then(
             usager =>   { 
@@ -325,9 +421,7 @@ router.post('/editer', estAuthentifie, estAdmin, (requete, reponse) => {
                             reponse.redirect('/usagers/editer/' + _id );
                         })
         .catch(err=>console.log(err));
-});
-
-/********************************************************************************************/
+}
 
 function supprimerFichier(path){
     let nomFichier = nodeJSpath.join(__dirname,'..',path);

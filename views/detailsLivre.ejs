@@ -1,0 +1,33 @@
+<h2>Collection de livres</h2>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+      <li class="breadcrumb-item active" ><a href="/livres">Livres</a></li>
+      <li class="breadcrumb-item active" aria-current="page"><%= livre.titre %></li>
+    </ol>
+</nav>
+
+<% let gestion = user.roles.find(role => role == 'gestion') %>
+<% let admin = user.roles.find(role => role == 'admin') %>
+
+<div class="card m-auto mb-3">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src="<%= livre.url_image %>" class="img-fluid rounded-start" alt="Page de couverture">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+            <h5 class="card-title"><%= livre.titre %></h5>
+            <p class="card-text" ><%= livre.resume %></p>
+            <p class="card-text"><strong>Auteur : </strong><%= livre.auteur %></p>
+            <p class="card-text"><strong>Langue : </strong><%= livre.langue %></p>
+            <p class="card-text"><strong>Prix : </strong><%= livre.prix %></p>
+            <p class="card-text"><strong>Genre : </strong><%= livre.genre %></p>
+            <% if(gestion){ %>
+              <a href="/livres/editer/<%= livre._id %>" class="btn btn-info" >Modifier</a>
+              <a href="/livres/supprimer/<%= livre._id %>" class="btn btn-warning" >Supprimer</a>
+            <% } %>
+        </div>
+      </div>
+    </div>
+</div>   

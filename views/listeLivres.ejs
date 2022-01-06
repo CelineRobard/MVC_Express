@@ -1,15 +1,41 @@
-<h1>Liste des livres :</h1>
+<h2>Collection de livres</h2>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Livres</li>
+    </ol>
+</nav>
 
-<% if(typeof tousLivres != 'undefined') { %>
-    <% tousLivres.forEach(function(livre) {%>
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <%= livre.titre %> - <%= livre.auteur %> 
-            <a href="/livres/editer/<%= livre._id %>" >Modifier</a>
-            <a href="/livres/supprimer/<%= livre._id %>" >Supprimer</a>
-        </div>   
-    <% }); %>                    
+<% let gestion = user.roles.find(role => role == 'gestion') %>
+<% let admin = user.roles.find(role => role == 'admin') %>
+
+<% if(gestion){ %>
+  <a href="/livres/ajouter" class="btn btn-primary btn-block mb-2">Ajouter un livre</a>
 <% } %>
 
-<p>
-    <a href="/">Retour au menu</a>
-</p>
+<div class="container" >
+    <% if(typeof tousLivres != 'undefined') { %>
+        <% tousLivres.forEach(function(livre) {%>
+            <div class="card m-auto mb-3" style="max-width: 650px;">
+                <div class="row g-0">
+                  <div class="col-md-4" style="max-width: 200px;">
+                    <img src="<%= livre.url_image %>" class="img-fluid rounded-start" alt="...">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body" style="max-height: 200px;">
+                        <h5 class="card-title"><%= livre.titre %></h5>
+                        <p class="card-text text-truncate text-wrap" style="max-height: 100px;"><%= livre.resume %></p>
+                        <p class="card-text"><strong>Auteur : </strong><%= livre.auteur %></p>
+                        <a href="/livres/details/<%= livre._id %>" class="btn btn-primary">Voir les détails</a>
+                        <% if(gestion){ %>
+                          <a href="/livres/editer/<%= livre._id %>" class="btn btn-info" >Modifier</a>
+                          <a href="/livres/supprimer/<%= livre._id %>" class="btn btn-warning" >Supprimer</a>
+                        <% } %>
+                    </div>
+                  </div>
+                </div>
+            </div>   
+        <% }); %>                    
+    <% } %>
+
+</div>

@@ -1,17 +1,21 @@
-<h1>Liste des usagers :</h1>
+<h2>Gestion des usagers</h2>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Usagers</li>
+    </ol>
+</nav>
+
+
+<a href="/usagers/ajouter" class="btn btn-primary btn-block mb-2">Ajouter un usager</a>
 
 <% if(typeof tousUsagers != 'undefined') { %>
     <% tousUsagers.forEach(function(usager) {%>
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             <img class="rounded-circle img-thumbnail" src="/images/<%= typeof usager.fichierImage == 'undefined' || usager.fichierImage == '' ? 'user-defaut.jpg' : usager.fichierImage %>" alt="Image de profil" />
-            <%= usager.fichierImage.length %>
             <%= usager.nom %> - <%= usager.email %> 
             <a href="/usagers/editer/<%= usager._id %>" >Modifier</a>
             <a href="/usagers/supprimer/<%= usager._id %>" >Supprimer</a>
         </div>   
     <% }); %>
 <% } %>
-
-<p>
-    <a href="/">Retour au menu</a>
-</p>
