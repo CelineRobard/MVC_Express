@@ -22,7 +22,7 @@ router.get('/', estAuthentifie, (requete, reponse) => {
     }).catch( err => console.log(err));
 });
 
-router.get('/details/:idLivre', estAuthentifie, estGestion, (requete,reponse) => {
+router.get('/details/:idLivre', estAuthentifie, (requete,reponse) => {
     Livres.findOne({ _id: requete.params.idLivre }).then(livre => {
         reponse.render('detailsLivre', {
             user:requete.user,
