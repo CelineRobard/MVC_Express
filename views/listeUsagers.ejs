@@ -6,16 +6,37 @@
     </ol>
 </nav>
 
+<% let cpt = 0;%>
 
 <a href="/usagers/ajouter" class="btn btn-primary btn-block mb-2">Ajouter un usager</a>
 
+<div class="container mt-4 mb-5">
+    <div class="row">
+
 <% if(typeof tousUsagers != 'undefined') { %>
     <% tousUsagers.forEach(function(usager) {%>
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <img class="rounded-circle img-thumbnail" src="/images/<%= typeof usager.fichierImage == 'undefined' || usager.fichierImage == '' ? 'user-defaut.jpg' : usager.fichierImage %>" alt="Image de profil" />
-            <%= usager.nom %> - <%= usager.email %> 
-            <a href="/usagers/editer/<%= usager._id %>" >Modifier</a>
-            <a href="/usagers/supprimer/<%= usager._id %>" >Supprimer</a>
-        </div>   
+        <% cpt ++; %>
+        <div class="col-sm">
+            <div class="card m-2" >
+                <div class="card-header d-flex justify-content-between">
+                    <div class="">#<%= cpt%></div>
+                    <div class="">
+                        <a class="btn btn-info btn-sm" href="/usagers/editer/<%= usager._id %>" ><i class="fas fa-edit"></i></a>
+                        <a class="btn btn-warning btn-sm" href="/usagers/supprimer/<%= usager._id %>" ><i class="fas fa-trash-alt"></i></a>
+                    </div>
+                </div>
+                <div class="card-body text-center">
+                    <img class="rounded-circle img-thumbnail" src="/images/<%= typeof usager.fichierImage == 'undefined' || usager.fichierImage == '' ? 'user-defaut.jpg' : usager.fichierImage %>" alt="Image de profil" />
+                    <h5 class="card-title"><%= usager.nom%></h5>
+                    <p class="card-subtitle mb-2 text-muted"><%= usager.email %></p>
+                </div>
+                <div class="card-footer text-muted">
+                    Modifié le <%= usager.date.toLocaleString() %>
+                </div>
+            </div>
+        </div>  
     <% }); %>
 <% } %>
+
+</div>
+</div>
