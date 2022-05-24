@@ -73,7 +73,7 @@ app.use('/javascript', express.static('./statique/javascript'));
 
 
 // connexion BD
-mongoose.connect('mongodb+srv://celine:YjUbgg78YUKg7NC@cluster0.4nird.mongodb.net/web2_TP1?retryWrites=true&w=majority');
+mongoose.connect('mongodb+srv://celine:password@cluster0.4nird.mongodb.net/web2_TP1?retryWrites=true&w=majority');
 
 let db = mongoose.connection;
 db.on('error', (err) => { console.error('erreur de BD:', err)});
