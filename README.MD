@@ -33,8 +33,3 @@ Lancement de l'application : npm run dev
 
 ![03_Usager](https://user-images.githubusercontent.com/88492160/170118130-a3480c39-a737-4412-8710-d5744f217105.PNG)
 
-
-![04_Livres](https://user-images.githubusercontent.com/88492160/170118140-4ad74666-791a-400a-8a8b-bd651577d583.PNG)
-
-
-![05_Livre](https://user-images.githubusercontent.com/88492160/170118155-84760d4b-29ca-4131-918c-23bf377e17dc.PNG)
